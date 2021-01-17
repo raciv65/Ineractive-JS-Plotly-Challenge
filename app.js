@@ -62,7 +62,7 @@ function Plots(sample_selected){
             marker: {
                 color: otu_ids,
                 size: sample_values,
-                colorscale: "Earth"
+                colorscale: "Bluered"
                 }
         }];
 
@@ -75,15 +75,42 @@ function Plots(sample_selected){
           Plotly.newPlot("BubbleChart",Bubble_trace, Bubble_layout);
              
         // Add info chart
-        let select_card=d3.select("#TextChart")
+        let select_card=d3.select("#TextChart").selectAll('p')
         let metadata=data.metadata[sample_selected]
         
-          for (var key in metadata){
-            select_card
-            .append("p")
-            .text(key+" : "+metadata[key])
-           }
+        text_inChart=[]
 
+          for (var key in metadata){
+            
+            text_inChart.push(key+" : "+metadata[key])
+           }
+        
+           select_card.data(text_inChart)
+           .enter()
+           .append("p")
+           .merge(select_card.data(text_inChart))
+           .text(d=>`${d}`)
+
+           //Gauge Charts
+           let Gauge_trace = [
+            {   type: "category",
+                domain: { x: [0], y: [0] },
+                value: metadata.wfreq,
+                text:[" ","8-9", "7-8", "6-7", "5-6", "4-5", "3-4", "2-3", "1-2", "0-1"]
+                
+                
+                
+            }
+        ];
+        
+        let Gauge_layout = {
+            title:"Belly Button Washing Frequency <br> Scrubs per Week",
+             width: 600,
+             height: 500,
+             margin: { t: 0, b: 0 }
+             };
+        
+             Plotly.newPlot('GaugeChart', Gauge_trace, Gauge_layout);
 
         
     })
@@ -101,6 +128,4 @@ d3.selectAll("#TestSubject")
         Plots(d3.select(this).property('value'))
     });
 
-
-   ;
 
