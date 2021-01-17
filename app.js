@@ -92,27 +92,65 @@ function Plots(sample_selected){
            .text(d=>`${d}`)
 
            //Gauge Charts
-           let Gauge_trace = [
-            {   type: "category",
-                domain: { x: [0], y: [0] },
-                value: metadata.wfreq,
-                text:[" ","8-9", "7-8", "6-7", "5-6", "4-5", "3-4", "2-3", "1-2", "0-1"]
-                
-                
-                
-            }
-        ];
-        
-        let Gauge_layout = {
-            title:"Belly Button Washing Frequency <br> Scrubs per Week",
-             width: 600,
-             height: 500,
-             margin: { t: 0, b: 0 }
-             };
-        
-             Plotly.newPlot('GaugeChart', Gauge_trace, Gauge_layout);
+           level = metadata.wfreq
 
-        
+
+           var degrees = ((level)*20-180)*-1;
+           
+           radius = .5;
+           var radians = degrees * Math.PI / 180;
+           var x = radius * Math.cos(radians);
+           var y = radius * Math.sin(radians);
+     
+           //Path to set needle
+            var mainPath = 'M -.0 -0.035 L .0 0.035 L ',
+                pathX = String(x),
+                space = ' ',
+                pathY = String(y),
+                pathEnd = ' Z';
+            var path = mainPath.concat(pathX,space,pathY,pathEnd);
+     
+           var Gauge_data = [{ type: 'category',
+             x: [0], y:[0],
+               marker: {size: 28, color:'black'},
+               showlegend: false,
+               name: 'Scrubs per week',
+               text: level,
+               hoverinfo: 'text+name'
+             },
+             { values: [10,10/9,10/9,10/9,10/9,10/9,10/9,10/9,10/9,10/9],
+               rotation: 90,
+               
+               text: [" ","8-9", "7-8", "6-7", "5-6", "4-5", "3-4", "2-3", "1-2", "0-1"],
+               textinfo: 'text',
+               textposition:'inside',      
+               marker: {colors:['rgba(255,255,255,1)','rgba(0,105,11,.5)','rgba(10,120,22,0.5)','rgba(14,127,0,0.5)','rgba(110,154,22,.5)','rgba(170,202,42,.5)','rgba(202,209,95,.5)','rgba(210,206,145,.5)','rgba(232,225,202,.5)','rgba(240,230,215,.5)']},
+               labels: [" ","8-9", "7-8", "6-7", "5-6", "4-5", "3-4", "2-3", "1-2", "0-1"],
+               hoverinfo: 'label',
+               hole: .5,
+               type: 'pie',
+               showlegend: false
+             }];
+     
+           var Gauge_layout = {
+             shapes:[{
+                 type: 'path',
+                 path: path,
+                 fillcolor: 'black',
+                 line: {
+                   color: "black"
+                 }
+               }],
+             title: 'Belly Button Washing Frequency <br> Scrubs per Week',
+             height: 500,
+             width:  500,
+             xaxis: {visible: false, range: [-1, 1]},
+             yaxis: {visible: false, range: [-1, 1]}
+           };
+ 
+Plotly.newPlot("GaugeChart", Gauge_data, Gauge_layout);
+
+       
     })
     
 }
