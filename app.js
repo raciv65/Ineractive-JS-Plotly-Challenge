@@ -42,10 +42,18 @@ function Plots(sample_selected){
            type:"bar",
             x: sample_values.slice(0,10),
             y: string_otu_ids.slice(0,10),
-             orientation: "h"
+             orientation: "h",
+             marker: {
+              color: 'rgb(46,86,101)',
+              opacity: 0.6,
+              line: {
+                color: 'rgb(8,48,107)',
+                width: 1.5
+              }
+            }
          }];
          let layout={
-             title: "Selected"
+             title: "OTUs"
          };
 
 
